@@ -41,8 +41,7 @@ class LoginUserAPIView(APIView):
     API view for user login.
 
     This view handles the POST request for user login. It expects the 'username' and 'password'
-    fields in the request data. If the provided credentials are valid, it returns a response
-    containing a refresh token and an access token. Otherwise, it returns an error response.
+    fields in the request data.
 
     Methods:
     - post(request: HttpRequest) -> Response: Handles the POST request for user login.
@@ -94,7 +93,7 @@ class UserProfileAPIView(APIView):
 
             return Response(serializer.data, status=status.HTTP_200_OK)
         except CustomUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request: HttpRequest, userid: int) -> Response:
         """
@@ -114,10 +113,11 @@ class UserProfileAPIView(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response(serializer.data, status=status.HTTP_200_OK)
+                return Response({'message': 'User has been updated successfully.'}, serializer.data, status=status.HTTP_200_OK)
+
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request: HttpRequest, userid: int) -> Response:
         """
@@ -134,6 +134,6 @@ class UserProfileAPIView(APIView):
             user = CustomUser.objects.get(pk=userid)
             user.delete()
 
-            return Response(status=status.HTTP_204_NO_CONTENT)
+            return Response({'message': 'User has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except CustomUser.DoesNotExist:
-            return Response(status=status.HTTP_404_NOT_FOUND)
+            return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
