@@ -1,19 +1,19 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.authtoken.models import Token
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 
-from .models import User
+from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 
 class RegisterUserAPIView(APIView):
     """
-    API view for registering a new user.
+    API view for registering a new user.s
 
     Methods:
     - post: Register a new user with the provided data.
@@ -41,14 +41,15 @@ class LoginUserAPIView(APIView):
     API view for user login.
 
     This view handles the POST request for user login. It expects the 'username' and 'password'
-    fields in the request data. If the provided credentials are valid, it returns a token in the
-    response. Otherwise, it returns an error message.
+    fields in the request data. If the provided credentials are valid, it returns a response
+    containing a refresh token and an access token. Otherwise, it returns an error response.
 
     Methods:
-        - post: Authenticate the user and return a token if the credentials are valid.
+    - post(request: HttpRequest) -> Response: Handles the POST request for user login.
 
     Returns:
-        - Response: The HTTP response object containing the token or error message.
+    - Response: The HTTP response object containing the refresh and access tokens if the login is successful,
+      or an error message if the provided credentials are invalid.
     """
 
     def post(self, request: HttpRequest) -> Response:
@@ -57,8 +58,11 @@ class LoginUserAPIView(APIView):
         user = authenticate(username=username, password=password)
 
         if user:
-            token, created = Token.objects.get_or_create(user=user)
-            return Response({'token': token.key}, status=status.HTTP_200_OK)
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }, status=status.HTTP_200_OK)
 
         return Response({"error": "Wrong Credentials"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -85,11 +89,11 @@ class UserProfileAPIView(APIView):
             Response: The serialized user data if found, or a 404 response if the user does not exist.
         """
         try:
-            user = User.objects.get(pk=userid)
+            user = CustomUser.objects.get(pk=userid)
             serializer = CustomUserSerializer(user)
 
             return Response(serializer.data, status=status.HTTP_200_OK)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request: HttpRequest, userid: int) -> Response:
@@ -104,7 +108,7 @@ class UserProfileAPIView(APIView):
             Response: The HTTP response containing the updated user data or an error message.
         """
         try:
-            user = User.objects.get(pk=userid)
+            user = CustomUser.objects.get(pk=userid)
             serializer = CustomUserSerializer(
                 user, data=request.data, partial=True)
 
@@ -112,7 +116,7 @@ class UserProfileAPIView(APIView):
                 serializer.save()
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request: HttpRequest, userid: int) -> Response:
@@ -127,9 +131,9 @@ class UserProfileAPIView(APIView):
             Response: The HTTP response indicating the success or failure of the deletion.
         """
         try:
-            user = User.objects.get(pk=userid)
+            user = CustomUser.objects.get(pk=userid)
             user.delete()
 
             return Response(status=status.HTTP_204_NO_CONTENT)
-        except User.DoesNotExist:
+        except CustomUser.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
