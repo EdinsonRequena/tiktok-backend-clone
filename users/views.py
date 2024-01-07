@@ -41,8 +41,7 @@ class LoginUserAPIView(APIView):
     API view for user login.
 
     This view handles the POST request for user login. It expects the 'username' and 'password'
-    fields in the request data. If the provided credentials are valid, it returns a response
-    containing a refresh token and an access token. Otherwise, it returns an error response.
+    fields in the request data.
 
     Methods:
     - post(request: HttpRequest) -> Response: Handles the POST request for user login.
