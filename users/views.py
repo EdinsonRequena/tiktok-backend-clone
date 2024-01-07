@@ -8,7 +8,10 @@ from django.contrib.auth import authenticate
 from django.contrib.auth.hashers import make_password
 
 from .models import CustomUser
+from utils import logger_config
 from .serializers import CustomUserSerializer
+
+logger = logger_config.configure_logger()
 
 
 class RegisterUserAPIView(APIView):
@@ -30,7 +33,6 @@ class RegisterUserAPIView(APIView):
             serializer.validated_data['password'] = make_password(
                 serializer.validated_data['password'])
             serializer.save()
-
             return Response(serializer.data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -90,9 +92,10 @@ class UserProfileAPIView(APIView):
         try:
             user = CustomUser.objects.get(pk=userid)
             serializer = CustomUserSerializer(user)
-
             return Response(serializer.data, status=status.HTTP_200_OK)
+
         except CustomUser.DoesNotExist:
+            logger.error(f"User with ID {userid} does not exist.")
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     def put(self, request: HttpRequest, userid: int) -> Response:
@@ -117,6 +120,7 @@ class UserProfileAPIView(APIView):
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
+            logger.error(f"User with ID {userid} does not exist.")
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
 
     def delete(self, request: HttpRequest, userid: int) -> Response:
@@ -136,4 +140,5 @@ class UserProfileAPIView(APIView):
 
             return Response({'message': 'User has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
         except CustomUser.DoesNotExist:
+            logger.error(f"User with ID {userid} does not exist.")
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
