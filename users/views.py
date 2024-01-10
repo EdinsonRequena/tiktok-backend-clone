@@ -138,7 +138,7 @@ class UserProfileAPIView(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response({'message': 'User has been updated successfully.'}, , status=status.HTTP_200_OK, serializer.data)
+                return Response({'message': 'User has been updated successfully.'}, serializer.data, status.HTTP_200_OK)
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
