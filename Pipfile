@@ -10,6 +10,7 @@ python-decouple = "*"
 djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
+pylint = "*"
 
 [dev-packages]
 
