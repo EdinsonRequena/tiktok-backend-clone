@@ -138,7 +138,11 @@ class UserProfileAPIView(APIView):
 
             if serializer.is_valid():
                 serializer.save()
-                return Response({'message': 'User has been updated successfully.'}, serializer.data, status.HTTP_200_OK)
+                return Response(
+                    {'message': 'User has been updated successfully.'},
+                    serializer.data,
+                    status.HTTP_200_OK
+                )
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         except CustomUser.DoesNotExist:
@@ -160,7 +164,10 @@ class UserProfileAPIView(APIView):
             user = CustomUser.objects.get(pk=userid)
             user.delete()
 
-            return Response({'message': 'User has been deleted successfully.'}, status=status.HTTP_204_NO_CONTENT)
+            return Response(
+                {'message': 'User has been deleted successfully.'},
+                status=status.HTTP_204_NO_CONTENT
+            )
         except CustomUser.DoesNotExist:
             logger.error("User with ID %s does not exist.", userid)
             return Response({'error': 'User not found.'}, status=status.HTTP_404_NOT_FOUND)
