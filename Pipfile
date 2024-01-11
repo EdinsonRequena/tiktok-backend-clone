@@ -11,6 +11,7 @@ djangorestframework = "*"
 djangorestframework-simplejwt = "*"
 pillow = "*"
 pylint = "*"
+coverage = "*"
 
 [dev-packages]
 
