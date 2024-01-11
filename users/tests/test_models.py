@@ -30,15 +30,31 @@ class CustomUserModelTest(TestCase):
         )
 
     def test_user_creation(self):
+        """
+        Confirm that the user is created correctly.
+        """
+
         self.assertEqual(self.user.username, 'testuser')
 
     def test_user_email(self):
+        """
+        Confirm that the user's email is set correctly.
+        """
+
         self.assertEqual(self.user.email, 'testuser@example.com')
 
     def test_user_bio(self):
+        """
+        Confirm that the user's bio is set correctly.
+        """
+
         self.assertEqual(self.user.bio, 'A bio here')
 
     def test_user_profile_picture(self):
+        """
+        Confirm that the user's profile picture is set correctly.
+        """
+
         self.assertTrue(
             self.user.profile_picture.name.endswith('test_image.jpg'))
 
