@@ -40,10 +40,16 @@ class RegisterUserAPIView(APIView):
         serializer = CustomUserSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.validated_data['password'] = make_password(
-                serializer.validated_data['password'])
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+            refresh = RefreshToken.for_user(user)
+            res_data = {
+                'user': serializer.data,
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+            return Response(res_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
