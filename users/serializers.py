@@ -21,7 +21,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     - create(validated_data: Dict[str, Any]) -> User: Creates a new User instance based on the validated data.
     """
 
-    class Meta:
+    class Meta:  # pylint: disable=too-few-public-methods
         model = User
         fields = ['id', 'username', 'email',
                   'password', 'bio', 'profile_picture']
