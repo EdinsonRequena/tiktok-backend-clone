@@ -18,7 +18,8 @@ class CustomUserSerializer(serializers.ModelSerializer):
     when sending data to the client.
 
     Methods:
-    - create(validated_data: Dict[str, Any]) -> User: Creates a new User instance based on the validated data.
+    - create(validated_data: Dict[str, Any]) -> User:
+    Creates a new User instance based on the validated data.
     """
 
     class Meta:  # pylint: disable=too-few-public-methods
