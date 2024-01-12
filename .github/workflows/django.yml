@@ -1,0 +1,56 @@
+name: Django CI
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:11
+        env:
+          POSTGRES_DB: test_db_name
+          POSTGRES_USER: test_db_user
+          POSTGRES_PASSWORD: test_db_password
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python 3.11
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.11
+
+    - name: Install dependencies
+      run: |
+        pip install pipenv
+        pipenv install --dev
+
+    - name: Run migrations
+      run: |
+        pipenv run python manage.py migrate
+
+    - name: Run tests
+      run: |
+        pipenv run python manage.py test
+
+    - name: Install PostgreSQL client
+      run: |
+        sudo apt-get install postgresql-client
+
+    - name: Check PostgreSQL service
+      run: |
+        pg_isready -h localhost -p 5432 -U test_db_user

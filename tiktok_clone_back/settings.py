@@ -95,16 +95,28 @@ WSGI_APPLICATION = 'tiktok_clone_back.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': config('DATABASE_NAME'),
-        'USER': config('DATABASE_USER'),
-        'PASSWORD': config('DATABASE_PASSWORD'),
-        'HOST': config('DATABASE_HOST'),
-        'PORT': config('DATABASE_PORT', cast=int),
+if 'test' in sys.argv:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('TEST_DATABASE_NAME', default='test_db_name'),
+            'USER': config('TEST_DATABASE_USER', default='test_db_user'),
+            'PASSWORD': config('TEST_DATABASE_PASSWORD', default='test_db_password'),
+            'HOST': config('TEST_DATABASE_HOST', default='localhost'),
+            'PORT': config('TEST_DATABASE_PORT', cast=int, default=5432),
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': config('DATABASE_NAME'),
+            'USER': config('DATABASE_USER'),
+            'PASSWORD': config('DATABASE_PASSWORD'),
+            'HOST': config('DATABASE_HOST'),
+            'PORT': config('DATABASE_PORT', cast=int),
+        }
+    }
 
 
 # Password validation
