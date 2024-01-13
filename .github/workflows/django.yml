@@ -13,7 +13,7 @@ jobs:
 
     services:
       postgres:
-        image: postgres:11
+        image: postgres:12
         env:
           POSTGRES_DB: test_db_name
           POSTGRES_USER: test_db_user
