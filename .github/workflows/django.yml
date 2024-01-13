@@ -69,3 +69,23 @@ jobs:
     - name: Check PostgreSQL service
       run: |
         pg_isready -h localhost -p 5432 -U test_db_user
+
+    - name: Run tests with coverage
+      run: |
+          pipenv run coverage run --source='.' manage.py test
+          pipenv run coverage xml -o coverage.xml
+      env:
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
+          DATABASE_NAME: ${{ secrets.TEST_DATABASE_NAME }}
+          DATABASE_USER: ${{ secrets.TEST_DATABASE_USER }}
+          DATABASE_PASSWORD: ${{ secrets.TEST_DATABASE_PASSWORD }}
+          DATABASE_HOST: ${{ secrets.TEST_DATABASE_HOST }}
+          DATABASE_PORT: ${{ secrets.TEST_DATABASE_PORT }}
+
+    - name: SonarCloud Scan
+      uses: SonarSource/sonarcloud-github-action@master
+      with:
+          projectBaseDir: .
+      env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_CLOUD_TOKEN }}
