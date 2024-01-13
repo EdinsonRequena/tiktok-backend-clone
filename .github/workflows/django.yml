@@ -17,7 +17,8 @@ jobs:
         env:
           POSTGRES_DB: test_db_name
           POSTGRES_USER: test_db_user
-          POSTGRES_PASSWORD: test_db_password
+          POSTGRES_PASSWORD: test_db_password\
+          DJANGO_SECRET_KEY: ${{ secrets.DJANGO_SECRET_KEY }}
         ports:
           - 5432:5432
         options: >-
