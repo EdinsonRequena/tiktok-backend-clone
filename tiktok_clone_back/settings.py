@@ -159,3 +159,8 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Tests
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
+    MEDIA_ROOT = os.path.join(BASE_DIR, 'test_media')

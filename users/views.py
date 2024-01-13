@@ -5,7 +5,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from django.http import HttpRequest
 from django.contrib.auth import authenticate
-from django.contrib.auth.hashers import make_password
 
 from utils import logger_config
 
@@ -40,10 +39,16 @@ class RegisterUserAPIView(APIView):
         serializer = CustomUserSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.validated_data['password'] = make_password(
-                serializer.validated_data['password'])
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            user.set_password(serializer.validated_data['password'])
+            user.save()
+            refresh = RefreshToken.for_user(user)
+            res_data = {
+                'user': serializer.data,
+                'refresh': str(refresh),
+                'access': str(refresh.access_token),
+            }
+            return Response(res_data, status=status.HTTP_201_CREATED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -139,9 +144,9 @@ class UserProfileAPIView(APIView):
             if serializer.is_valid():
                 serializer.save()
                 return Response(
-                    {'message': 'User has been updated successfully.'},
-                    serializer.data,
-                    status.HTTP_200_OK
+                    {'message': 'User has been updated successfully.',
+                        'data': serializer.data, },
+                    status.HTTP_200_OK,
                 )
 
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
