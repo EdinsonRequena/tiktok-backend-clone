@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+import os
 import sys
 from pathlib import Path
 
@@ -94,7 +95,7 @@ WSGI_APPLICATION = 'tiktok_clone_back.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
-if 'test' in sys.argv:
+if 'test' in sys.argv or os.getenv('GITHUB_ACTIONS'):
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
