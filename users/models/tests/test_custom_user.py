@@ -4,7 +4,7 @@ from django.conf import settings
 from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from users.models import CustomUser
+from users.models.custom_user_models import CustomUser
 
 
 class CustomUserModelTest(TestCase):
