@@ -57,6 +57,10 @@ To get started with the TikTok Clone backend, follow these steps:
 
 Contributions are welcome! If you find any issues or have suggestions for improvements, please open an issue or submit a pull request. PRs must have a minimum of 80% test coverage to be accepted.
 
+## Authors
+
+- Edinson Requena - [LinkedIn](https://www.linkedin.com/in/edinson-requena-9496a2178/) | [Twitter](https://twitter.com/RequenaEA) | [Instagram](https://www.instagram.com/edinsonrequena/) | [GitHub](https://github.com/EdinsonRequena)
+
 ## License
 
 This project is licensed under the [BSD 3-Clause](LICENSE).
