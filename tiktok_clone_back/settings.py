@@ -100,8 +100,8 @@ if 'test' in sys.argv or os.getenv('GITHUB_ACTIONS'):
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
             'NAME': config('TEST_DATABASE_NAME', default='test_db_name'),
-            'USER': config('DATABASE_USER', default='test_db_user'),
-            'PASSWORD': config('DATABASE_PASSWORD', default='test_db_password'),
+            'USER': config('TEST_DATABASE_USER', default='test_db_user'),
+            'PASSWORD': config('TEST_DATABASE_PASSWORD', default='test_db_password'),
             'HOST': config('TEST_DATABASE_HOST', default='localhost'),
             'PORT': config('TEST_DATABASE_PORT', cast=int, default=5432),
         }
