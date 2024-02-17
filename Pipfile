@@ -12,6 +12,8 @@ djangorestframework-simplejwt = "*"
 pillow = "*"
 pylint = "*"
 coverage = "*"
+pipfile = "*"
+pylint-django = "*"
 
 [dev-packages]
 
