@@ -22,7 +22,7 @@ class CustomUserSerializer(serializers.ModelSerializer):
     Creates a new User instance based on the validated data.
     """
 
-    class Meta:  # pylint: disable=too-few-public-methods
+    class Meta:
         model = User
         fields = ['id', 'username', 'email',
                   'password', 'bio', 'profile_picture']
