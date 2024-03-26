@@ -23,7 +23,7 @@ class UserProfileAPIView(APIView):
     - delete: Delete a user profile by user ID.
     """
 
-    def get(self, request: HttpRequest, userid: int) -> Response:  # pylint: disable=unused-argument
+    def get(self, request: HttpRequest, userid: int) -> Response:
         """
         Retrieve a user by their ID.
 
@@ -73,7 +73,7 @@ class UserProfileAPIView(APIView):
             logger.error(USER_WITH_ID_NOT_FOUND, userid)
             return Response({'error': USER_NOT_FOUND_MESSAGE}, status=status.HTTP_404_NOT_FOUND)
 
-    def delete(self, request: HttpRequest, userid: int) -> Response:  # pylint: disable=unused-argument
+    def delete(self, request: HttpRequest, userid: int) -> Response:
         """
         Deletes a user with the given userid.
 
